@@ -1,114 +1,69 @@
-# PyEditorial
-A free, open-source Blog CMS based on the "Django" and "Editorial" HTML5 theme.
+# PyEditorial with PSQL and Dev/Prod Environments
+This project is a fork of [https://github.com/mavenium/PyEditorial](https://github.com/mavenium/PyEditorial).
 
-![](https://img.shields.io/github/stars/mavenium/PyEditorial) 
-[![](https://img.shields.io/github/forks/mavenium/PyEditorial)](https://github.com/mavenium/PyEditorial/fork)
-[![](https://img.shields.io/github/issues/mavenium/PyEditorial)](https://github.com/mavenium/PyEditorial/issues)
-![](https://img.shields.io/twitter/url?url=https%3A%2F%2Fgithub.com%2Fmavenium%2FPyEditorial)
+This application is built to work in two different environments: Development and Production. 
+The Development environment is all about making it easy and fast for developers to work on 
+the project. It uses the runserver command, which allows you to see changes instantly as you
+code. 
 
-------------
-### Features
+Each part of the application—like the web server and the database—runs in its own Docker
+container, making it simple to manage everything and allowing multiple developers to work
+together smoothly. 
 
-- "Blog" section to create and edit a blog + Blog Category
-- "Videocast" section to create and edit a videocast + Videocast Category
-- "Podcast" section to create and edit a podcast + podcast Category
-- "Skill" section to create and edit a skill
-- "CONSTANCE" Section to manage dynamic Django settings (Blog title, Social Networks links and ...)
-- Displays the list of Blog posts as paged in archive
-- Displays the list of Videocast as paged in archive
-- Displays the list of podcast as paged in archive
-- Used "Django Admin" to manage all models
-- Used "Editorial" theme by HTML5 UP
-- Used "Sqlite" to create DB
-- Used "CKEditor"
-- Translation ready
-- Auth system (login & logout and forget a password)
-- Front-end forms to create new object
-------------
-[![](https://i.ibb.co/mtmbfhp/buy-me-a-coffee.png)](https://www.blockchain.com/btc/payment_request?address=1ChqZPGhxpn6HB1WuQh55S3Mf8RydxMiFk&amount=0.00018711 "Buy me a coffee")
-- You can buy me a coffee so I can turn it into more open source projects :)
-------------
-### Special Thanks
+On the other hand, the Production environment is designed for when we’re
+ready to go live. It uses Gunicorn and Nginx to ensure that the app runs efficiently and 
+securely, serving users over HTTPS for safe browsing (now, self signed). 
 
-| Python | Django | Pycharm |
-| ------------- | ------------- | ------------- |
-| [![](https://s17.picofile.com/file/8418101118/python.png)](https://www.python.org "Python")  | [![](https://i.ibb.co/KbJPgRr/django.png)](https://www.djangoproject.com "Django")  | [![](https://s17.picofile.com/file/8418101034/pycharm.png)](https://www.jetbrains.com/pycharm/ "Pycharm")  |
+Just like in Development, we use Docker
+containers here too, which helps keep everything organized and easy to scale as needed. 
+By having these two environments, we can move seamlessly from building features to deploying
+them, ensuring a great experience for both developers and users.
+
+![img.png](img.png)
+
+
 
 ------------
-### Screenshots
+### Run with automated scripts
 
-![](https://raw.githubusercontent.com/mavenium/PyEditorial/master/Screenshots/Index.png)
-> Index Page
-
-![](https://raw.githubusercontent.com/mavenium/PyEditorial/master/Screenshots/Archive.png)
-> Archive Page
-
-![](https://raw.githubusercontent.com/mavenium/PyEditorial/master/Screenshots/Blog-Single.png)
-> Blog Single Page
-
-![](https://raw.githubusercontent.com/mavenium/PyEditorial/master/Screenshots/Podcast-Single.png)
-> Podcast Single Page
-
-![](https://raw.githubusercontent.com/mavenium/PyEditorial/master/Screenshots/Videocast-Single.png)
-> Videocast Single Page
-
-![](https://raw.githubusercontent.com/mavenium/PyEditorial/master/Screenshots/Admin.png)
-> Admin Area
-
-![](https://raw.githubusercontent.com/mavenium/PyEditorial/master/Screenshots/Constance.png)
-> Dynamic Django Settings
-
-![](https://raw.githubusercontent.com/mavenium/PyEditorial/master/Screenshots/Blog-Admin.png)
-> Blog Section
-
-![](https://raw.githubusercontent.com/mavenium/PyEditorial/master/Screenshots/Add-Blog.png)
-> Add Blog
-
-![](https://raw.githubusercontent.com/mavenium/PyEditorial/master/Screenshots/Add-Videocast.png)
-> Add Videocast
-
-![](https://github.com/mavenium/PyEditorial/blob/master/Screenshots/Add-Skill.png)
-> Add Skill
-
-![](https://raw.githubusercontent.com/mavenium/PyEditorial/master/Screenshots/Add-Podcast.png)
-> Add Podcast
-
-------------
-### How to install and run (GNU/Linux and Mac)
-                
-1. Install [git](https://git-scm.com/downloads),[python3](https://www.python.org/downloads/), `pip3`, [virtualenv](https://pypi.org/project/virtualenv/) in your operating system
-2. Create a development environment ready by using these commands
+1. Install Docker on your operating system
+2. Give privileges to what you want to use
 ```
-git clone https://github.com/mavenium/PyEditorial		# clone the project
-cd PyEditorial		                                        # go to the project DIR
-virtualenv -p python3 .venv		                        # Create virtualenv named .venv
-source .venv/bin/activate		                        # Active virtualenv named .venv
-pip install -r requirements.txt		                        # Install project requirements in .venv
-python manage.py makemigrations		                        # Create migrations files
-python manage.py migrate		                        # Create database tables
-python manage.py collectstatic		                        # Create statics files
-python manage.py runserver		                        # Run the project
+chmod +x start_dev_environment.sh start_prod_environment.sh stop_dev_environment.sh stop_prod_environment.sh
 ```
-3. Go to  `http://127.0.0.1:8000/` to use project
+3. Run the following command to create and run the dev environment
+```
+./start_dev_environment.sh
+```
+4. Go to  `http://127.0.0.1:8000/` in your browser to use dev environment
 ------------
+If you want to use prod environment, run the following command
+```
+./start_prod_environment.sh
+```
+Go to  `https://127.0.0.1` or just type `localhost` in your browser to use prod environment with HTTPS.
+
+If you want to stop them, run the following commands
+```
+./stop_dev_environment.sh
+./stop_prod_environment.sh
+```
 ------------
 ### Run with Docker
 
 1. Install Docker on your operating system
-2. Install docker-compose on your operating system
+2. Update the environment variables in the docker-compose.prod.yml and docker-compose.dev.yml files.
 3. Run the following command to create and run the project
 ```
-docker-compose up [-d]
+docker compose -f docker-compose.dev.yml up [-d]
 ```
-3. Go to  `http://127.0.0.1:80/` or just type `localhost` in your browser to use project
+4. Go to  `http://127.0.0.1:8000/` in your browser to use dev environment
+```
+docker compose -f docker-compose.prod.yml up [-d]
+```
+4. Go to  `https://127.0.0.1/` in your browser to use prod environment with HTTPS.
 ------------
-
 ### Notes
 The Editorial template is released under license "Creative Commons Attribution 3.0 Unported".
 
 ------------
-### TODO list
-
-- [x] Create search section
-- [x] Create user Login/Logout forms in front-end
-- [x] Create dynamic forms to add contents in front-end

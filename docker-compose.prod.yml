@@ -10,7 +10,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: great123
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_prod:/var/lib/postgresql/data
 
   web:
     container_name: web
@@ -45,4 +45,4 @@ services:
       - web
 
 volumes:
-  postgres_data:
+  postgres_data_prod:
