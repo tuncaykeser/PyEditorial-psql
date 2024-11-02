@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+  db:
+    container_name: db
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: PyEditorial_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: great123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  web:
+    container_name: web
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: ./manage.py runserver 0.0.0.0:8000
+    environment:
+      DJANGO_ALLOWED_HOSTS: localhost 127.0.0.1 [::1]
+      DATABASE: postgres
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_DATABASE: PyEditorial_dev
+      POSTGRES_PASSWORD: great123
+      DEBUG: 1
+    ports:
+      - 8000:8000
+    volumes:
+      - ./:/app
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:

@@ -1,13 +1,25 @@
-FROM python:3.9
+FROM python:3.11.4-buster
 
 WORKDIR /app
-COPY . .
+# set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-# install requirements
+# install system dependencies
+RUN apt-get update && apt-get install -y netcat
+
+# install dependencies
+RUN pip install --upgrade pip
+COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 
-# migrations
-RUN python manage.py makemigrations content
-RUN python manage.py migrate
-# static
-RUN python manage.py collectstatic --noinput
+# copy entrypoint.sh
+COPY ./entrypoint.sh .
+RUN sed -i 's/\r$//g' /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# copy project
+COPY . .
+
+# run entrypoint.sh
+ENTRYPOINT ["sh", "/app/entrypoint.sh"]
